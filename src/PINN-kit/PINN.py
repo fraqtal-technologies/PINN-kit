@@ -5,13 +5,24 @@ import torch
 import torch.nn as nn
 from torch.autograd import Variable
 from torch.optim.lr_scheduler import ReduceLROnPlateau
-from Domain import *
+from src.Domain import *
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
 from matplotlib import cm
 from matplotlib.ticker import LinearLocator, FormatStrFormatter
 
 class PINN(nn.Module):
+    """Physics-Informed Neural Network (PINN) implementation.
+    
+    This class implements a neural network that can be trained to solve differential equations
+    by incorporating physical constraints into the loss function.
+    
+    Args:
+        layer_list (list): List of integers specifying the number of neurons in each layer
+        activation_function_name (str, optional): Name of activation function to use. Defaults to "tanh"
+        initialisation_function_name (str, optional): Name of weight initialization function. Defaults to "xavier_normal"
+        function_ansatz (callable, optional): Optional function to modify network output. Defaults to None
+    """
     # initialises the network 
     def __init__(self, layer_list, activation_function_name = "tanh", initialisation_function_name = "xavier_normal", function_ansatz = None):
         super().__init__()
@@ -27,6 +38,14 @@ class PINN(nn.Module):
 
     # initialise the weights in the neural network 
     def _init_weights(self,set_bias_to_zero=True):
+        """Initialize the weights of the neural network layers.
+        
+        Args:
+            set_bias_to_zero (bool, optional): Whether to initialize bias terms to zero. Defaults to True.
+            
+        Raises:
+            ValueError: If unknown initialization function is specified
+        """
         if self.initialisation_function_name == "xavier_normal":
             init_func = torch.nn.init.xavier_normal_
         elif self.initialisation_function_name == "xavier_uniform":
@@ -43,6 +62,17 @@ class PINN(nn.Module):
     # computes the forward pass with the defined neural network 
     # and its current weights
     def forward(self,input_tensors):
+        """Perform forward pass through the neural network.
+        
+        Args:
+            input_tensors (list): List of input tensors to be concatenated
+            
+        Returns:
+            torch.Tensor: Network output after passing through all layers
+            
+        Raises:
+            ValueError: If unknown activation function is specified
+        """
         if self.activation_function_name == "tanh":
             act_func = torch.tanh
         elif self.activation_function_name == "relu":
@@ -68,6 +98,15 @@ class PINN(nn.Module):
         return input
     
     def configure_optimiser(self, optimiser_name, initial_lr=0.002):
+        """Configure the optimizer for training.
+        
+        Args:
+            optimiser_name (str): Name of optimizer to use ("adam" or "lbfgs")
+            initial_lr (float, optional): Initial learning rate. Defaults to 0.002
+            
+        Raises:
+            ValueError: If unknown optimizer is specified
+        """
         if optimiser_name == "adam":
             self.optimizer = torch.optim.Adam(self.parameters(),
                                                 lr=initial_lr)
@@ -84,15 +123,37 @@ class PINN(nn.Module):
             raise ValueError(f'Unknown Optimiser: {optimiser_name}')
         
     def configure_lr_scheduler(self,lr_scheduler_name=None,factor=0.5,patience=100):
+        """Configure learning rate scheduler.
+        
+        Args:
+            lr_scheduler_name (str, optional): Name of scheduler to use. Defaults to None
+            factor (float, optional): Factor to reduce learning rate by. Defaults to 0.5
+            patience (int, optional): Number of epochs to wait before reducing lr. Defaults to 100
+        """
         if lr_scheduler_name == "reduce_lr_on_plateau":
             self.scheduler = ReduceLROnPlateau(self.optimizer, mode='min', factor=factor, patience=patience)
         else:
             self.scheduler = None 
     
     def set_path(self, path):
+        """Set the path for saving model checkpoints.
+        
+        Args:
+            path (str): Path where model checkpoints will be saved
+        """
         self.path = path 
 
     def compute_loss(network, input_tensors, loss_list):
+        """Compute the total loss for the network.
+        
+        Args:
+            network (PINN): The neural network instance
+            input_tensors (list): List of input tensors
+            loss_list (list): List of dictionaries containing loss functions and their weights
+            
+        Returns:
+            torch.Tensor: Total weighted loss
+        """
         net_output = network(input_tensors)
 
         total_loss = 0 
@@ -112,12 +173,35 @@ class PINN(nn.Module):
 
 
     def train_model(self, input_arrays, loss_list, num_epochs, batch_size=None, monitoring_function=None):
+        """Train the neural network.
+        
+        Args:
+            input_arrays (list): List of input arrays
+            loss_list (list): List of loss functions and their weights
+            num_epochs (int): Number of training epochs
+            batch_size (int, optional): Size of batches for training. Defaults to None
+            monitoring_function (callable, optional): Function to monitor training progress. Defaults to None
+            
+        Returns:
+            numpy.ndarray: Training history containing loss values
+        """
         if isinstance(self.optimizer, torch.optim.Adam):
             return self._train_adam(input_arrays, loss_list, num_epochs, batch_size, monitoring_function=monitoring_function)
         elif isinstance(self.optimizer, torch.optim.LBFGS):
             return self._train_lbfgs(input_arrays, loss_list, num_epochs, monitoring_function=monitoring_function)
 
     def _train_lbfgs(self, input_arrays, loss_list, num_epochs, monitoring_function=None):
+        """Train the network using L-BFGS optimizer.
+        
+        Args:
+            input_arrays (list): List of input arrays
+            loss_list (list): List of loss functions and their weights
+            num_epochs (int): Number of training epochs
+            monitoring_function (callable, optional): Function to monitor training progress. Defaults to None
+            
+        Returns:
+            numpy.ndarray: Training history containing loss values
+        """
         print("Training with LBFGS")
 
         tensor_list = convert_to_torch_tensors(input_arrays)
@@ -198,6 +282,18 @@ class PINN(nn.Module):
 
 
     def _train_adam(self, input_arrays, loss_list, num_epochs, batch_size, monitoring_function=None):
+        """Train the network using Adam optimizer.
+        
+        Args:
+            input_arrays (list): List of input arrays
+            loss_list (list): List of loss functions and their weights
+            num_epochs (int): Number of training epochs
+            batch_size (int): Size of batches for training
+            monitoring_function (callable, optional): Function to monitor training progress. Defaults to None
+            
+        Returns:
+            numpy.ndarray: Training history containing loss values
+        """
         print("Training with ADAM Optimiser")
 
         print(device)
@@ -335,6 +431,12 @@ class PINN(nn.Module):
         return training_history 
 
 def plot_history(values,path=None):
+    """Plot training history.
+    
+    Args:
+        values (numpy.ndarray): Array of loss values to plot
+        path (str, optional): Path to save the plot. Defaults to None
+    """
     plt.figure(figsize=(10, 10))
     plt.plot(values, linestyle='-', color='b')
     plt.yscale('log')
@@ -348,6 +450,16 @@ def plot_history(values,path=None):
     plt.show()
 
 def plot_3d_net_solution(net,epoch_idx,show_plot=False):
+    """Plot 3D visualization of network solution.
+    
+    Args:
+        net (PINN): Trained neural network
+        epoch_idx (int): Current epoch number
+        show_plot (bool, optional): Whether to display the plot. Defaults to False
+        
+    Returns:
+        matplotlib.pyplot: Plot object if show_plot is False
+    """
     fig = plt.figure()
     ax = plt.axes(projection='3d')
 
