@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "pinn_kit"
-version = "0.0.3"
+version = "0.0.4"
 authors = [
     { name = "Shivani", email = "shivani@example.com" },
 ]
@@ -31,4 +31,4 @@ Homepage = "https://github.com/shivani/PINN-kit"
 Issues = "https://github.com/shivani/PINN-kit/issues"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/PINN-kit"]
+packages = ["src/pinn_kit"]
