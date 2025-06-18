@@ -310,21 +310,21 @@ network = PINN(layer_list)
 ## Common Issues and Solutions
 
 1. **Training Instability**:
-    - Reduce learning rate
-    - Use gradient clipping
-    - Normalize input data
+   - Reduce learning rate
+   - Use gradient clipping
+   - Normalize input data
 
 2. **Poor Solution Accuracy**:
-    - Increase number of training points
-    - Add more layers or neurons
-    - Try different sampling strategies
+   - Increase number of training points
+   - Add more layers or neurons
+   - Try different sampling strategies
 
 3. **Slow Training**:
-    - Reduce batch size
-    - Use GPU acceleration
-    - Simplify network architecture
+   - Reduce batch size
+   - Use GPU acceleration
+   - Simplify network architecture
 
 4. **Overfitting**:
-    - Add regularization
-    - Reduce network size
-    - Increase number of training points 
+   - Add regularization
+   - Reduce network size
+   - Increase number of training points 

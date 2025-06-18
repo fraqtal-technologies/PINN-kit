@@ -129,7 +129,7 @@ class Domain:
             
             # Create space for sampling
             space = Space(sample_bounds)
-            
+
             # Generate samples
             X = np.asarray(sampler_obj.generate(space.dimensions, num_samples + skip, random_state=10)[skip:])
             
@@ -223,7 +223,7 @@ class Domain:
         fixed_points = {'x': x0, 'y': y0, 't': 0.0}
         result = self.sample_bc_points(fixed_points, num_samples, sampler=sampler)
         return result[0], result[1], result[2]  # x, y, t
-
+    
 # MODIFIED
 def convert_to_torch_tensors(input_arrays):
     """Convert numpy arrays to PyTorch tensors.
