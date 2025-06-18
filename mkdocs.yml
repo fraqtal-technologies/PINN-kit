@@ -1,0 +1,9 @@
+site_name: PINN-kit Documentation
+nav:
+  - Home: README.md
+  - Domain: docs/Domain.md
+  - Usage Guide: docs/PINN_usage_guide.md
+  - About: docs/PINN.md
+theme:
+  name: material
+docs_dir: docs 

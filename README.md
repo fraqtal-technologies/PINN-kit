@@ -51,7 +51,7 @@ pip install pinn-kit
 
 > **Note:** There is no need to install torch separately; it will be installed automatically with pinn-kit.
 
-## Quick Start
+## PINN-kit is easy to use
 
 ```python
 from pinn_kit import PINN, Domain
