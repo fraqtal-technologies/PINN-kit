@@ -66,10 +66,10 @@ def find_ic_indices(input_tensors):
 
 def find_boundary_indices(input_tensors):
     pt_x, pt_y, pt_t = input_tensors[0], input_tensors[1], input_tensors[2]
-    boundary_indices = torch.nonzero(pt_x[:,0]==domain.x_min)
-    boundary_indices = torch.cat((boundary_indices,torch.nonzero(pt_x[:,0]==domain.x_max)))
-    boundary_indices = torch.cat((boundary_indices,torch.nonzero(pt_y[:,0]==domain.y_min)))
-    boundary_indices = torch.cat((boundary_indices,torch.nonzero(pt_y[:,0]==domain.y_max)))
+    boundary_indices = torch.nonzero(pt_x[:,0]==domain.bounds[0][0])
+    boundary_indices = torch.cat((boundary_indices,torch.nonzero(pt_x[:,0]==domain.bounds[0][1])))
+    boundary_indices = torch.cat((boundary_indices,torch.nonzero(pt_y[:,0]==domain.bounds[1][0])))
+    boundary_indices = torch.cat((boundary_indices,torch.nonzero(pt_y[:,0]==domain.bounds[1][1])))
     boundary_indices = boundary_indices.unique()
 
     return boundary_indices
@@ -187,17 +187,21 @@ network = network.to(device)
 # In[14]:
 
 
-domain = Domain(X_MIN,X_MAX,Y_MIN,Y_MAX,T_MIN,T_MAX)
+domain = Domain.from_xy_t(X_MIN, X_MAX, Y_MIN, Y_MAX, T_MIN, T_MAX)
 num_samples = NUM_SAMPLES
 
-x_arr, y_arr, t_arr = np.linspace(domain.x_min,domain.x_max,num_samples).reshape(num_samples,1), np.linspace(domain.y_min,domain.y_max,num_samples).reshape(num_samples,1), np.linspace(domain.t_min,domain.t_max,num_samples).reshape(num_samples,1)
+x_arr, y_arr, t_arr = np.linspace(domain.bounds[0][0], domain.bounds[0][1], num_samples).reshape(num_samples,1), np.linspace(domain.bounds[1][0], domain.bounds[1][1], num_samples).reshape(num_samples,1), np.linspace(domain.bounds[2][0], domain.bounds[2][1], num_samples).reshape(num_samples,1)
 
 x_arr = np.insert(x_arr,0,0)
 y_arr = np.insert(y_arr,0,0)
 t_arr = np.insert(t_arr,0,0)
 
 if CONVERT_TO_MESHGRID:
-    x_arr, y_arr, t_arr = convert_to_meshgrid(x_arr,y_arr,t_arr)
+    # New flexible meshgrid interface (accepts list of arrays)
+    x_arr, y_arr, t_arr = convert_to_meshgrid([x_arr, y_arr, t_arr])
+    
+    # Alternative: Use backward compatibility function
+    # x_arr, y_arr, t_arr = convert_to_meshgrid_xy_t(x_arr, y_arr, t_arr)
 
 loss_list = [{"function":residual_loss, "indices": None, "weight": 1},
              {"function":ic_loss, "indices": find_ic_indices, "weight": 1},

@@ -257,8 +257,48 @@ def to_variable(domain):
         return Variable(torch.from_numpy(domain).float(),requires_grad=True).to(device)
     
 
-def convert_to_meshgrid(x_arr,y_arr,t_arr):
-    """Convert 1D arrays to a 3D meshgrid and reshape to 2D arrays.
+def convert_to_meshgrid(input_arrays):
+    """Convert 1D arrays to a meshgrid and reshape to 2D arrays.
+    
+    This function takes a list of 1D arrays and creates a meshgrid from them,
+    then reshapes the result to 2D arrays suitable for neural network input.
+    
+    Args:
+        input_arrays (list): List of 1D numpy arrays to convert to meshgrid
+                            Example: [x_arr, y_arr, t_arr] or [x_arr, y_arr]
+        
+    Returns:
+        tuple: Reshaped meshgrid coordinates as 2D arrays
+               Example: (xx, yy, tt) or (xx, yy) depending on input dimensions
+    """
+    if not isinstance(input_arrays, list):
+        raise ValueError("input_arrays must be a list of numpy arrays")
+    
+    if len(input_arrays) < 2:
+        raise ValueError("At least 2 arrays are required for meshgrid")
+    
+    # Calculate total number of samples
+    num_samples = 1
+    for arr in input_arrays:
+        if not isinstance(arr, np.ndarray):
+            raise ValueError("All inputs must be numpy arrays")
+        num_samples *= arr.shape[0]
+    
+    # Create meshgrid
+    meshgrid_arrays = np.meshgrid(*input_arrays)
+    
+    # Reshape each array to (num_samples, 1)
+    result_arrays = []
+    for arr in meshgrid_arrays:
+        result_arrays.append(arr.reshape(num_samples, 1))
+    
+    return tuple(result_arrays)
+
+def convert_to_meshgrid_xy_t(x_arr, y_arr, t_arr):
+    """Backward compatibility function for convert_to_meshgrid with x, y, t parameters.
+    
+    This function maintains the old interface for existing code that uses
+    the specific x, y, t parameter names.
     
     Args:
         x_arr (numpy.ndarray): 1D array of x-coordinates
@@ -268,11 +308,7 @@ def convert_to_meshgrid(x_arr,y_arr,t_arr):
     Returns:
         tuple: (xx, yy, tt) Reshaped meshgrid coordinates
     """
-    num_samples = x_arr.shape[0]*y_arr.shape[0]*t_arr.shape[0]
-
-    xx, yy, tt = np.meshgrid(x_arr,y_arr,t_arr)
-
-    return xx.reshape(num_samples,1), yy.reshape(num_samples,1), tt.reshape(num_samples,1)
+    return convert_to_meshgrid([x_arr, y_arr, t_arr])
 
 def plot_points(x_arr,y_arr,title="Meshgrid of Points"):
     """Plot 2D points with specified title.

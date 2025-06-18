@@ -165,9 +165,45 @@ Convert domain data to PyTorch variables with gradient tracking.
 
 ### convert_to_meshgrid
 ```python
-convert_to_meshgrid(x_arr, y_arr, t_arr)
+convert_to_meshgrid(input_arrays)
 ```
-Convert 1D arrays to a 3D meshgrid and reshape to 2D arrays.
+Convert 1D arrays to a meshgrid and reshape to 2D arrays.
+
+This function takes a list of 1D arrays and creates a meshgrid from them,
+then reshapes the result to 2D arrays suitable for neural network input.
+
+**Parameters:**
+- `input_arrays` (list): List of 1D numpy arrays to convert to meshgrid
+  Example: [x_arr, y_arr, t_arr] or [x_arr, y_arr]
+
+**Returns:**
+- `tuple`: Reshaped meshgrid coordinates as 2D arrays
+  Example: (xx, yy, tt) or (xx, yy) depending on input dimensions
+
+**Examples:**
+```python
+# 2D meshgrid
+x = np.linspace(0, 1, 10)
+y = np.linspace(0, 1, 10)
+xx, yy = convert_to_meshgrid([x, y])
+
+# 3D meshgrid
+t = np.linspace(0, 1, 5)
+xx, yy, tt = convert_to_meshgrid([x, y, t])
+
+# 4D meshgrid (if needed)
+z = np.linspace(0, 1, 3)
+xx, yy, tt, zz = convert_to_meshgrid([x, y, t, z])
+```
+
+### convert_to_meshgrid_xy_t
+```python
+convert_to_meshgrid_xy_t(x_arr, y_arr, t_arr)
+```
+Backward compatibility function for convert_to_meshgrid with x, y, t parameters.
+
+This function maintains the old interface for existing code that uses
+the specific x, y, t parameter names.
 
 **Parameters:**
 - `x_arr` (numpy.ndarray): 1D array of x-coordinates
@@ -176,6 +212,12 @@ Convert 1D arrays to a 3D meshgrid and reshape to 2D arrays.
 
 **Returns:**
 - `tuple`: (xx, yy, tt) Reshaped meshgrid coordinates
+
+**Example:**
+```python
+# Old interface (still works)
+xx, yy, tt = convert_to_meshgrid_xy_t(x, y, t)
+```
 
 ### plot_points
 ```python
@@ -275,6 +317,17 @@ x_arr, y_arr, t_arr = domain.sample_bc_points(
 # Convert to PyTorch tensors
 tensors = convert_to_torch_tensors([x_arr, y_arr, t_arr])
 
+# Create meshgrid from 1D arrays
+x_1d = np.linspace(-1, 1, 50)
+y_1d = np.linspace(-1, 1, 50)
+t_1d = np.linspace(0, 1, 10)
+
+# Create 3D meshgrid
+xx, yy, tt = convert_to_meshgrid([x_1d, y_1d, t_1d])
+
+# Create 2D meshgrid (for spatial problems)
+xx_2d, yy_2d = convert_to_meshgrid([x_1d, y_1d])
+
 # Create batches for training
 batches = gen_batch_data([x_arr, y_arr, t_arr], batch_size=32)
 
@@ -295,4 +348,7 @@ x_arr, y_arr, t_arr = domain.sample_points_xy_t(
 )
 
 x_arr, y_arr, t_arr = domain.sample_bc_points_xy_t(0, 0, 100)
-``` 
+
+# Use old-style meshgrid function
+xx, yy, tt = convert_to_meshgrid_xy_t(x_1d, y_1d, t_1d)
+```
