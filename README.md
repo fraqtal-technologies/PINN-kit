@@ -62,6 +62,10 @@ domain = Domain(...)
 # Initialize a PINN
 pinn = PINN(...)
 
+# Define the loss terms
+def loss():
+    return loss_function
+
 # Train the network
 pinn.train_model(...)
 ```
