@@ -1,9 +1,25 @@
 site_name: PINN-kit Documentation
 nav:
-  - Home: README.md
-  - Domain: docs/Domain.md
-  - Usage Guide: docs/PINN_usage_guide.md
-  - About: docs/PINN.md
+  - Home: index.md
+  - Usage Guide: PINN_usage_guide.md
+  - Domain Module: Domain.md
+  - PINN Module: PINN.md
+  - Test Highlighting: test.md
+
 theme:
   name: material
+  icon:
+    repo: fontawesome/brands/github
+  features:
+    - content.code.copy
+    - content.code.select
+    - content.code.line_numbers
+markdown_extensions:
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+repo_url: https://github.com/shivani/PINN-kit
+repo_name: GitHub
+
 docs_dir: docs 

@@ -12,14 +12,14 @@ This guide explains how to use the PINN-kit library to develop and train Physics
 
 ## Setup
 
-First, ensure you have the required dependencies installed:
+First, ensure you have the required dependencies installed and import the package as follows:
+
 ```python
 import numpy as np
 import torch
 import torch.nn as nn
 from torch.autograd import Variable
-from Domain import Domain
-from PINN import PINN
+from pinn_kit import Domain, PINN
 ```
 
 ## Domain Definition
@@ -216,21 +216,21 @@ training_history = network.train_model(
 ## Common Issues and Solutions
 
 1. **Training Instability**:
-   - Reduce learning rate
-   - Use gradient clipping
-   - Normalize input data
+    - Reduce learning rate
+    - Use gradient clipping
+    - Normalize input data
 
 2. **Poor Solution Accuracy**:
-   - Increase number of training points
-   - Add more layers or neurons
-   - Try different sampling strategies
+    - Increase number of training points
+    - Add more layers or neurons
+    - Try different sampling strategies
 
 3. **Slow Training**:
-   - Reduce batch size
-   - Use GPU acceleration
-   - Simplify network architecture
+    - Reduce batch size
+    - Use GPU acceleration
+    - Simplify network architecture
 
 4. **Overfitting**:
-   - Add regularization
-   - Reduce network size
-   - Increase number of training points 
+    - Add regularization
+    - Reduce network size
+    - Increase number of training points 
