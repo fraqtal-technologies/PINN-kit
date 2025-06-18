@@ -1,30 +1,61 @@
 # Domain Module Documentation
 
-The Domain module provides functionality for handling spatial-temporal domains in physics-informed neural networks, including point sampling, data conversion, and visualization.
+The Domain module provides functionality for handling multi-dimensional domains in physics-informed neural networks, including point sampling, data conversion, and visualization. The Domain class now supports arbitrary input variables, not just x, y, and t.
 
 ## Class: Domain
 
-A class representing a spatial-temporal domain with methods for sampling points using various strategies.
+A class representing a multi-dimensional domain with methods for sampling points using various strategies.
 
 ### Initialization
 
+The Domain class now accepts an arbitrary list of input variables:
+
 ```python
-Domain(x_min, x_max, y_min, y_max, t_min, t_max)
+Domain(variables)
 ```
 
 **Parameters:**
-- `x_min` (float): Minimum x-coordinate of the domain
-- `x_max` (float): Maximum x-coordinate of the domain
-- `y_min` (float): Minimum y-coordinate of the domain
-- `y_max` (float): Maximum y-coordinate of the domain
-- `t_min` (float): Minimum time value
-- `t_max` (float): Maximum time value
+- `variables` (list): List of tuples (variable_name, min_value, max_value) defining the domain
+  - `variable_name` (str): Name of the variable (e.g., 'x', 'y', 't', 'param')
+  - `min_value` (float): Minimum value for the variable
+  - `max_value` (float): Maximum value for the variable
+
+**Examples:**
+```python
+# 2D spatial domain
+domain_2d = Domain([('x', -1, 1), ('y', -1, 1)])
+
+# 3D spatial-temporal domain
+domain_3d = Domain([('x', -5, 5), ('y', -5, 5), ('t', 0, 1)])
+
+# 4D domain with additional parameters
+domain_4d = Domain([('x', -1, 1), ('y', -1, 1), ('t', 0, 1), ('param', 0, 10)])
+```
+
+### Backward Compatibility
+
+For existing code that uses x, y, t variables, you can use the convenience method:
+
+```python
+Domain.from_xy_t(x_min, x_max, y_min, y_max, t_min, t_max)
+```
+
+**Parameters:**
+- `x_min, x_max` (float): x-coordinate bounds
+- `y_min, y_max` (float): y-coordinate bounds  
+- `t_min, t_max` (float): time bounds
+
+**Example:**
+```python
+# Equivalent to the old constructor
+domain = Domain.from_xy_t(x_min=-1, x_max=1, y_min=-1, y_max=1, t_min=0, t_max=1)
+```
 
 ### Methods
 
 #### sample_points
 ```python
-sample_points(num_samples, sampler=None, fixed_time=None)
+sample_points(num_samples, sampler=None, fixed_values=None)
 ```
 Sample points within the domain using specified sampling strategy.
 
@@ -38,25 +69,73 @@ Sample points within the domain using specified sampling strategy.
   - "halton": Halton sequence
   - "hammersly": Hammersly sequence
   - "sobol": Sobol sequence
-- `fixed_time` (float, optional): If provided, all points will be sampled at this time value
+- `fixed_values` (dict, optional): Dictionary mapping variable names to fixed values.
+  If provided, those variables will be sampled at fixed values.
+  Example: {'t': 0.5} will fix time to 0.5
 
 **Returns:**
-- `tuple`: (x_arr, y_arr, t_arr) Arrays of sampled coordinates
+- `tuple`: Arrays of sampled coordinates for each variable
+
+**Examples:**
+```python
+# Sample all variables
+x_arr, y_arr, t_arr = domain.sample_points(num_samples=100)
+
+# Sample with fixed time
+x_arr, y_arr, t_arr = domain.sample_points(num_samples=100, fixed_values={'t': 0.5})
+
+# Sample with multiple fixed values
+x_arr, y_arr, t_arr, param_arr = domain_4d.sample_points(
+    num_samples=100, 
+    fixed_values={'t': 0.5, 'param': 5.0}
+)
+```
 
 #### sample_bc_points
 ```python
-sample_bc_points(x0, y0, num_samples, sampler=None)
+sample_bc_points(fixed_points, num_samples, sampler=None)
 ```
-Sample boundary condition points, including a specific point (x0,y0).
+Sample boundary condition points, including specific fixed points.
 
 **Parameters:**
-- `x0` (float): x-coordinate of the fixed point
-- `y0` (float): y-coordinate of the fixed point
-- `num_samples` (int): Total number of points to sample (including fixed point)
+- `fixed_points` (dict): Dictionary mapping variable names to fixed values
+  Example: {'x': 0, 'y': 0}
+- `num_samples` (int): Total number of points to sample (including fixed points)
 - `sampler` (str, optional): Sampling strategy to use for remaining points
 
 **Returns:**
-- `tuple`: (x_arr, y_arr, t_arr) Arrays of sampled coordinates
+- `tuple`: Arrays of sampled coordinates for each variable
+
+**Example:**
+```python
+# Sample boundary conditions with fixed x, y
+x_arr, y_arr, t_arr = domain.sample_bc_points(
+    fixed_points={'x': 0, 'y': 0}, 
+    num_samples=100
+)
+```
+
+#### Backward Compatibility Methods
+
+For existing code that expects x, y, t specific methods:
+
+```python
+sample_points_xy_t(num_samples, sampler=None, fixed_time=None)
+```
+Backward compatibility method for sampling x, y, t points.
+
+```python
+sample_bc_points_xy_t(x0, y0, num_samples, sampler=None)
+```
+Backward compatibility method for sampling boundary condition points with x, y, t.
+
+**Example:**
+```python
+# Old-style usage (still works)
+domain = Domain.from_xy_t(-1, 1, -1, 1, 0, 1)
+x_arr, y_arr, t_arr = domain.sample_points_xy_t(100, fixed_time=0.5)
+x_arr, y_arr, t_arr = domain.sample_bc_points_xy_t(0, 0, 100)
+```
 
 ## Utility Functions
 
@@ -166,16 +245,31 @@ Generate batches of domain data using PyTorch DataLoader.
 **Returns:**
 - `list`: List of batched data tensors
 
-## Usage Example
+## Usage Examples
+
+### New Flexible Interface
 
 ```python
-# Create a domain
-domain = Domain(x_min=-1, x_max=1, y_min=-1, y_max=1, t_min=0, t_max=1)
+# Create a 3D domain
+domain = Domain([('x', -1, 1), ('y', -1, 1), ('t', 0, 1)])
 
 # Sample points using Latin Hypercube Sampling
 x_arr, y_arr, t_arr = domain.sample_points(
     num_samples=1000,
     sampler="lhs_classic"
+)
+
+# Sample with fixed time
+x_arr, y_arr, t_arr = domain.sample_points(
+    num_samples=1000,
+    sampler="lhs_classic",
+    fixed_values={'t': 0.5}
+)
+
+# Sample boundary conditions
+x_arr, y_arr, t_arr = domain.sample_bc_points(
+    fixed_points={'x': 0, 'y': 0},
+    num_samples=100
 )
 
 # Convert to PyTorch tensors
@@ -186,4 +280,19 @@ batches = gen_batch_data([x_arr, y_arr, t_arr], batch_size=32)
 
 # Plot the sampled points
 plot_points(x_arr, y_arr, title="Sampled Points")
+```
+
+### Backward Compatibility
+
+```python
+# Create domain using old-style constructor
+domain = Domain.from_xy_t(x_min=-1, x_max=1, y_min=-1, y_max=1, t_min=0, t_max=1)
+
+# Use old-style sampling methods
+x_arr, y_arr, t_arr = domain.sample_points_xy_t(
+    num_samples=1000,
+    sampler="lhs_classic"
+)
+
+x_arr, y_arr, t_arr = domain.sample_bc_points_xy_t(0, 0, 100)
 ``` 

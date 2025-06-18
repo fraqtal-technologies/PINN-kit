@@ -15,28 +15,22 @@ from skopt.sampler import Sobol
 device = "mps"
 
 class Domain:
-    """A class representing a spatial-temporal domain for physics-informed neural networks.
+    """A class representing a multi-dimensional domain for physics-informed neural networks.
     
-    This class handles the definition of spatial and temporal boundaries and provides
+    This class handles the definition of domain boundaries for arbitrary input variables and provides
     methods for sampling points within the domain using various sampling strategies.
     
     Args:
-        x_min (float): Minimum x-coordinate of the domain
-        x_max (float): Maximum x-coordinate of the domain
-        y_min (float): Minimum y-coordinate of the domain
-        y_max (float): Maximum y-coordinate of the domain
-        t_min (float): Minimum time value
-        t_max (float): Maximum time value
+        variables (list): List of tuples (variable_name, min_value, max_value) defining the domain
+                         Example: [('x', -1, 1), ('y', -1, 1), ('t', 0, 1)]
     """
-    def __init__(self,x_min,x_max,y_min,y_max,t_min,t_max):
-        self.x_min = x_min
-        self.x_max = x_max
-        self.y_min = y_min 
-        self.y_max = y_max
-        self.t_min = t_min
-        self.t_max = t_max
+    def __init__(self, variables):
+        self.variables = variables
+        self.variable_names = [var[0] for var in variables]
+        self.bounds = [(var[1], var[2]) for var in variables]
+        self.dimensions = len(variables)
 
-    def sample_points(self,num_samples,sampler=None,fixed_time=None):
+    def sample_points(self, num_samples, sampler=None, fixed_values=None):
         """Sample points within the domain using specified sampling strategy.
         
         Args:
@@ -49,93 +43,187 @@ class Domain:
                 - "halton": Halton sequence
                 - "hammersly": Hammersly sequence
                 - "sobol": Sobol sequence
-            fixed_time (float, optional): If provided, all points will be sampled at this time value
+            fixed_values (dict, optional): Dictionary mapping variable names to fixed values.
+                                         If provided, those variables will be sampled at fixed values.
+                                         Example: {'t': 0.5} will fix time to 0.5
             
         Returns:
-            tuple: (x_arr, y_arr, t_arr) Arrays of sampled coordinates
+            tuple: Arrays of sampled coordinates for each variable
         """
-        # generates evenly spaced samples
-        if sampler == None:
-            x_arr = np.linspace(self.x_min,self.x_max,num_samples).reshape(num_samples,1)
-            y_arr = np.linspace(self.y_min,self.y_max,num_samples).reshape(num_samples,1)
-            if fixed_time == None:
-                # fixed_time is none (generate evenly spaced points in time)
-                t_arr = np.linspace(self.t_min,self.t_max,num_samples).reshape(num_samples,1)
+        if fixed_values is None:
+            fixed_values = {}
+        
+        # Check if all fixed values correspond to valid variable names
+        for var_name in fixed_values.keys():
+            if var_name not in self.variable_names:
+                raise ValueError(f"Variable '{var_name}' not found in domain variables: {self.variable_names}")
+        
+        # Determine which variables to sample and which are fixed
+        sample_indices = []
+        sample_bounds = []
+        fixed_indices = []
+        fixed_values_list = []
+        
+        for i, var_name in enumerate(self.variable_names):
+            if var_name in fixed_values:
+                fixed_indices.append(i)
+                fixed_values_list.append(fixed_values[var_name])
             else:
-                # fixed_time is some float (generate points of a fixed value fixed_time)
-                t_arr = np.ones([num_samples,1])*fixed_time
-
+                sample_indices.append(i)
+                sample_bounds.append(self.bounds[i])
+        
+        # Generate evenly spaced samples
+        if sampler is None:
+            result_arrays = []
+            for i in range(self.dimensions):
+                if i in fixed_indices:
+                    # Fixed value
+                    fixed_idx = fixed_indices.index(i)
+                    arr = np.ones([num_samples, 1]) * fixed_values_list[fixed_idx]
+                else:
+                    # Sample evenly spaced
+                    sample_idx = sample_indices.index(i)
+                    min_val, max_val = sample_bounds[sample_idx]
+                    arr = np.linspace(min_val, max_val, num_samples).reshape(num_samples, 1)
+                result_arrays.append(arr)
+            
+            return tuple(result_arrays)
+        
+        # Generate random samples
         elif sampler == "random":
-            x_arr = np.random.uniform(low=self.x_min, high=self.x_max, size=(num_samples,1))
-            y_arr = np.random.uniform(low=self.y_min, high=self.y_max, size=(num_samples,1))
-            if fixed_time == None:
-                # fixed_time is none (generate evenly spaced points in time)
-                t_arr = np.random.uniform(low=self.t_min, high=self.t_max, size=(num_samples,1))
-            else:
-                # fixed_time is some float (generate points of a fixed value fixed_time)
-                t_arr = np.ones([num_samples,1])*fixed_time
-
+            result_arrays = []
+            for i in range(self.dimensions):
+                if i in fixed_indices:
+                    # Fixed value
+                    fixed_idx = fixed_indices.index(i)
+                    arr = np.ones([num_samples, 1]) * fixed_values_list[fixed_idx]
+                else:
+                    # Random uniform sampling
+                    sample_idx = sample_indices.index(i)
+                    min_val, max_val = sample_bounds[sample_idx]
+                    arr = np.random.uniform(low=min_val, high=max_val, size=(num_samples, 1))
+                result_arrays.append(arr)
+            
+            return tuple(result_arrays)
+        
+        # Generate samples using scikit-optimize samplers
         else:
             skip = 0
             # Latin Hypercube Sampling
             if sampler == "lhs_classic":
-                sampler = Lhs(lhs_type="classic")
+                sampler_obj = Lhs(lhs_type="classic")
             elif sampler == "lhs_centered":
-                sampler = Lhs(lhs_type="centered")
+                sampler_obj = Lhs(lhs_type="centered")
             elif sampler == "halton":
                 skip = 1
-                sampler = Halton()
+                sampler_obj = Halton()
             elif sampler == "hammersly":
                 skip = 1
-                sampler = Hammersly()
+                sampler_obj = Hammersly()
             elif sampler == "sobol":
                 skip = 1
-                sampler = Sobol(randomize=False)
+                sampler_obj = Sobol(randomize=False)
             else:
                 print("This method is not available.")
-                return None,None,None
-
-            if fixed_time == None:
-                space = Space([(self.x_min,self.x_max),(self.y_min,self.y_max),(self.t_min,self.t_max)])
-
-                # X will have shape [num_samples,num_dimensions]    
-                X = np.asarray(sampler.generate(space.dimensions, num_samples + skip, random_state=10)[skip:])
-                x_arr = X[:,0].reshape(num_samples,1)
-                y_arr = X[:,1].reshape(num_samples,1)
-
-                # fixed_time is none (generate evenly spaced points in time)
-                t_arr = X[:,2].reshape(num_samples,1)
-            else:
-                space = Space([(self.x_min,self.x_max),(self.y_min,self.y_max)])
-
-                # X will have shape [num_samples,num_dimensions]    
-                X = np.asarray(sampler.generate(space.dimensions, num_samples, random_state=10))
-                x_arr = X[:,0].reshape(num_samples,1)
-                y_arr = X[:,1].reshape(num_samples,1)
-                
-                # fixed_time is some float (generate points of a fixed value fixed_time)
-                t_arr = np.ones([num_samples,1])*fixed_time
-
-        return x_arr, y_arr, t_arr
+                return None
+            
+            # Create space for sampling
+            space = Space(sample_bounds)
+            
+            # Generate samples
+            X = np.asarray(sampler_obj.generate(space.dimensions, num_samples + skip, random_state=10)[skip:])
+            
+            # Organize results
+            result_arrays = []
+            sample_idx = 0
+            for i in range(self.dimensions):
+                if i in fixed_indices:
+                    # Fixed value
+                    fixed_idx = fixed_indices.index(i)
+                    arr = np.ones([num_samples, 1]) * fixed_values_list[fixed_idx]
+                else:
+                    # Sampled value
+                    arr = X[:, sample_idx].reshape(num_samples, 1)
+                    sample_idx += 1
+                result_arrays.append(arr)
+            
+            return tuple(result_arrays)
     
-    def sample_bc_points(self,x0,y0,num_samples,sampler=None):
-        """Sample boundary condition points, including a specific point (x0,y0).
+    def sample_bc_points(self, fixed_points, num_samples, sampler=None):
+        """Sample boundary condition points, including specific fixed points.
         
         Args:
-            x0 (float): x-coordinate of the fixed point
-            y0 (float): y-coordinate of the fixed point
-            num_samples (int): Total number of points to sample (including fixed point)
+            fixed_points (dict): Dictionary mapping variable names to fixed values
+                               Example: {'x': 0, 'y': 0}
+            num_samples (int): Total number of points to sample (including fixed points)
             sampler (str, optional): Sampling strategy to use for remaining points
+            
+        Returns:
+            tuple: Arrays of sampled coordinates for each variable
+        """
+        # Sample points with fixed values
+        result_arrays = self.sample_points(num_samples - 1, sampler=sampler, fixed_values=fixed_points)
+        
+        # Insert the fixed point at the beginning
+        result_arrays = list(result_arrays)
+        for i, var_name in enumerate(self.variable_names):
+            if var_name in fixed_points:
+                result_arrays[i] = np.insert(result_arrays[i], 0, fixed_points[var_name], axis=0)
+        
+        return tuple(result_arrays)
+    
+    # Backward compatibility methods for x, y, t
+    @classmethod
+    def from_xy_t(cls, x_min, x_max, y_min, y_max, t_min, t_max):
+        """Create a Domain instance with x, y, t variables for backward compatibility.
+        
+        Args:
+            x_min, x_max (float): x-coordinate bounds
+            y_min, y_max (float): y-coordinate bounds  
+            t_min, t_max (float): time bounds
+            
+        Returns:
+            Domain: Domain instance with x, y, t variables
+        """
+        variables = [('x', x_min, x_max), ('y', y_min, y_max), ('t', t_min, t_max)]
+        return cls(variables)
+    
+    def sample_points_xy_t(self, num_samples, sampler=None, fixed_time=None):
+        """Backward compatibility method for sampling x, y, t points.
+        
+        Args:
+            num_samples (int): Number of points to sample
+            sampler (str, optional): Sampling strategy
+            fixed_time (float, optional): Fixed time value
             
         Returns:
             tuple: (x_arr, y_arr, t_arr) Arrays of sampled coordinates
         """
-        x_arr, y_arr, t_arr = self.sample_points(num_samples-1,sampler=sampler,fixed_time=0.)
-        x_arr = np.insert(x_arr,0,x0,axis=0)
-        y_arr = np.insert(y_arr,0,y0,axis=0)
-        t_arr = np.insert(t_arr,0,0.,axis=0)
-        return x_arr, y_arr, t_arr 
+        if self.variable_names != ['x', 'y', 't']:
+            raise ValueError("This method only works with x, y, t domains. Use sample_points() for other domains.")
+        
+        fixed_values = {'t': fixed_time} if fixed_time is not None else None
+        result = self.sample_points(num_samples, sampler=sampler, fixed_values=fixed_values)
+        return result[0], result[1], result[2]  # x, y, t
     
+    def sample_bc_points_xy_t(self, x0, y0, num_samples, sampler=None):
+        """Backward compatibility method for sampling boundary condition points with x, y, t.
+        
+        Args:
+            x0, y0 (float): Fixed x, y coordinates
+            num_samples (int): Total number of points
+            sampler (str, optional): Sampling strategy
+            
+        Returns:
+            tuple: (x_arr, y_arr, t_arr) Arrays of sampled coordinates
+        """
+        if self.variable_names != ['x', 'y', 't']:
+            raise ValueError("This method only works with x, y, t domains. Use sample_bc_points() for other domains.")
+        
+        fixed_points = {'x': x0, 'y': y0, 't': 0.0}
+        result = self.sample_bc_points(fixed_points, num_samples, sampler=sampler)
+        return result[0], result[1], result[2]  # x, y, t
+
 # MODIFIED
 def convert_to_torch_tensors(input_arrays):
     """Convert numpy arrays to PyTorch tensors.

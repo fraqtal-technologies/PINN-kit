@@ -6,7 +6,7 @@ A toolkit for Physics-Informed Neural Networks (PINNs). This package provides to
 
 - Easy-to-use interface for defining physics-informed neural networks
 - Support for various types of differential equations
-- Domain handling utilities
+- Flexible domain handling utilities for arbitrary input variables
 - Training and evaluation tools
 
 ## Installation
@@ -56,11 +56,15 @@ pip install pinn-kit
 ```python
 from pinn_kit import PINN, Domain
 
-# Create a domain
-domain = Domain(...)
+# Create a domain with flexible variable definition
+domain = Domain([
+    ('x', -1, 1),  # x-coordinate bounds
+    ('y', -1, 1),  # y-coordinate bounds
+    ('t', 0, 1)    # time bounds
+])
 
 # Initialize a PINN
-pinn = PINN(...)
+pinn = PINN([3, 20, 20, 1])  # 3 inputs, 2 hidden layers, 1 output
 
 # Define the loss terms
 def loss():
@@ -76,4 +80,4 @@ For detailed documentation, please visit [our documentation page](https://github
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE] file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
