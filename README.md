@@ -63,7 +63,7 @@ domain = Domain(...)
 pinn = PINN(...)
 
 # Train the network
-pinn.train(...)
+pinn.train_model(...)
 ```
 
 ## Documentation
