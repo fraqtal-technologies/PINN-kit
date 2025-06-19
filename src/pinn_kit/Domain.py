@@ -12,7 +12,13 @@ from skopt.sampler import Halton
 from skopt.sampler import Sobol
 
 
-device = "mps"
+device = (
+    "cuda"
+    if torch.cuda.is_available()
+    else "mps"
+    if torch.backends.mps.is_available()
+    else "cpu"
+        )
 
 class Domain:
     """A class representing a multi-dimensional domain for physics-informed neural networks.
