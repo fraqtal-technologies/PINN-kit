@@ -1,0 +1,197 @@
+/* Custom styles for PINN-kit documentation */
+
+/* Enhanced typography */
+.md-content {
+  font-size: 1.1rem;
+  line-height: 1.7;
+}
+
+.md-content h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--md-primary-fg-color);
+  border-bottom: 3px solid var(--md-primary-fg-color);
+  padding-bottom: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.md-content h2 {
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--md-primary-fg-color);
+  margin-top: 3rem;
+  margin-bottom: 1.5rem;
+  padding-left: 1rem;
+  border-left: 4px solid var(--md-accent-fg-color);
+}
+
+.md-content h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--md-default-fg-color);
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+/* Enhanced code blocks */
+.md-content pre {
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--md-default-fg-color--lightest);
+  background: var(--md-code-bg-color);
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.md-content code {
+  background: var(--md-code-bg-color);
+  color: var(--md-code-fg-color);
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.9em;
+  border: 1px solid var(--md-default-fg-color--lightest);
+}
+
+/* Enhanced tables */
+.md-content table {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin: 2rem 0;
+}
+
+.md-content th {
+  background: var(--md-primary-fg-color);
+  color: var(--md-primary-bg-color);
+  font-weight: 600;
+  padding: 1rem;
+  text-align: left;
+}
+
+.md-content td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--md-default-fg-color--lightest);
+}
+
+.md-content tr:nth-child(even) {
+  background: var(--md-default-bg-color--lightest);
+}
+
+/* Enhanced navigation */
+.md-nav__title {
+  font-weight: 600;
+  color: var(--md-primary-fg-color);
+}
+
+.md-nav__link {
+  border-radius: 4px;
+  margin: 0.2rem 0;
+  transition: all 0.2s ease;
+}
+
+.md-nav__link:hover {
+  background: var(--md-primary-fg-color--lightest);
+  transform: translateX(4px);
+}
+
+/* Enhanced buttons and callouts */
+.md-button {
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.md-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Custom callout styles */
+.admonition {
+  border-radius: 8px;
+  border-left: 4px solid;
+  margin: 2rem 0;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.admonition.note {
+  background: rgba(33, 150, 243, 0.1);
+  border-left-color: #2196f3;
+}
+
+.admonition.warning {
+  background: rgba(255, 152, 0, 0.1);
+  border-left-color: #ff9800;
+}
+
+.admonition.tip {
+  background: rgba(76, 175, 80, 0.1);
+  border-left-color: #4caf50;
+}
+
+/* Enhanced search */
+.md-search__input {
+  border-radius: 20px;
+  border: 2px solid var(--md-primary-fg-color--lightest);
+  transition: all 0.2s ease;
+}
+
+.md-search__input:focus {
+  border-color: var(--md-primary-fg-color);
+  box-shadow: 0 0 0 3px rgba(63, 81, 181, 0.1);
+}
+
+/* Enhanced footer */
+.md-footer {
+  background: var(--md-primary-fg-color);
+  color: var(--md-primary-bg-color);
+  margin-top: 4rem;
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+  .md-content h1 {
+    font-size: 2rem;
+  }
+  
+  .md-content h2 {
+    font-size: 1.5rem;
+  }
+  
+  .md-content {
+    font-size: 1rem;
+  }
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Enhanced focus states */
+.md-content a:focus,
+.md-nav__link:focus,
+.md-button:focus {
+  outline: 2px solid var(--md-primary-fg-color);
+  outline-offset: 2px;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--md-default-bg-color--lightest);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--md-primary-fg-color--lightest);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--md-primary-fg-color);
+} 
