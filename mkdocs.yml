@@ -16,39 +16,16 @@ theme:
   name: material
   icon:
     repo: fontawesome/brands/github
-    edit: fontawesome/solid/pen-to-square
-    view: fontawesome/solid/eye
   favicon: assets/favicon.svg
-  # Ensure sidebar is visible
-  navigation:
-    style: primary
-  # Sidebar configuration
   features:
     - content.code.copy
     - content.code.select
-    - content.code.line_numbers
-    - content.code.annotate
-    - content.tabs.link
-    - content.tabs.tooltip
     - navigation.expand
     - navigation.footer
-    - navigation.indexes
-    - navigation.instant
-    - navigation.instant.prefetch
-    - navigation.instant.progress
-    - navigation.instant.result
-    - navigation.instant.suggest
-    - navigation.prune
     - navigation.sections
-    - navigation.tabs
-    - navigation.tabs.sticky
     - navigation.top
-    - navigation.tracking
     - search.highlight
-    - search.share
-    - search.suggest
     - toc.follow
-    - toc.integrate
   palette:
     # Light mode
     - media: "(prefers-color-scheme)"
@@ -66,47 +43,19 @@ theme:
       toggle:
         icon: material/brightness-7
         name: Switch to light mode
-    # Light mode
-    - media: "(prefers-color-scheme: light)"
-      scheme: default
-      primary: indigo
-      accent: indigo
-      toggle:
-        icon: material/brightness-4
-        name: Switch to system preference
-  font:
-    text: Roboto
-    code: Roboto Mono
-  analytics:
-    provider: google
-    property: !ENV GOOGLE_ANALYTICS_KEY
-
-extra_css:
-  - assets/stylesheets/extra.css
 
 extra_javascript:
-  - https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js
-  - assets/javascripts/mermaid.js
   - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
 
 extra:
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/shivani/PINN-kit
-    - icon: fontawesome/brands/twitter
-      link: https://twitter.com/yourusername
-    - icon: fontawesome/brands/linkedin
-      link: https://linkedin.com/in/yourusername
 
 markdown_extensions:
   - pymdownx.highlight:
       anchor_linenums: true
-      line_spans: __span
       pygments_lang_class: true
-  - pymdownx.inlinehilite
-  - pymdownx.snippets:
-      auto_append:
-        - includes/mkdocs.md
   - pymdownx.superfences:
       custom_fences:
         - name: mermaid
@@ -114,15 +63,6 @@ markdown_extensions:
           format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.tabbed:
       alternate_style: true
-      combine_header_slug: true
-      slugify: !!python/object/apply:pymdownx.slugs.slugify
-        kwds:
-          case: lower
-  - pymdownx.tasklist:
-      custom_checkbox: true
-  - pymdownx.emoji:
-      emoji_generator: !!python/name:material.extensions.emoji.to_svg
-      emoji_index: !!python/name:material.extensions.emoji.twemoji
   - attr_list
   - md_in_html
   - def_list
@@ -141,8 +81,6 @@ plugins:
       indexing: 'full'
   - git-revision-date-localized:
       enable_creation_date: true
-  - minify:
-      minify_html: true
 
 repo_url: https://github.com/shivani/PINN-kit
 repo_name: GitHub
