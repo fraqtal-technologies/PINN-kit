@@ -19,31 +19,10 @@ theme:
     edit: fontawesome/solid/pen-to-square
     view: fontawesome/solid/eye
   favicon: assets/favicon.svg
-  palette:
-    # Light mode
-    - media: "(prefers-color-scheme)"
-      scheme: default
-      primary: indigo
-      accent: indigo
-      toggle:
-        icon: material/brightness-auto
-        name: Switch to dark mode
-    # Dark mode
-    - media: "(prefers-color-scheme: dark)"
-      scheme: slate
-      primary: indigo
-      accent: indigo
-      toggle:
-        icon: material/brightness-7
-        name: Switch to light mode
-    # Light mode
-    - media: "(prefers-color-scheme: light)"
-      scheme: default
-      primary: indigo
-      accent: indigo
-      toggle:
-        icon: material/brightness-4
-        name: Switch to system preference
+  # Ensure sidebar is visible
+  navigation:
+    style: primary
+  # Sidebar configuration
   features:
     - content.code.copy
     - content.code.select
@@ -69,6 +48,32 @@ theme:
     - search.share
     - search.suggest
     - toc.follow
+    - toc.integrate
+  palette:
+    # Light mode
+    - media: "(prefers-color-scheme)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-auto
+        name: Switch to dark mode
+    # Dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to light mode
+    # Light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to system preference
   font:
     text: Roboto
     code: Roboto Mono

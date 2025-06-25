@@ -1,5 +1,44 @@
 /* Custom styles for PINN-kit documentation */
 
+/* Ensure sidebar is visible and properly styled */
+.md-nav--primary {
+  display: block !important;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 300px;
+  height: 100vh;
+  overflow-y: auto;
+  background: var(--md-default-bg-color);
+  border-right: 1px solid var(--md-default-fg-color--lightest);
+  z-index: 100;
+}
+
+/* Hide top navigation if it exists */
+.md-header-nav {
+  display: none !important;
+}
+
+/* Adjust main content to account for sidebar */
+.md-main {
+  margin-left: 300px;
+}
+
+.md-content {
+  margin-left: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .md-nav--primary {
+    display: none !important;
+  }
+  
+  .md-main {
+    margin-left: 0;
+  }
+}
+
 /* Enhanced typography */
 .md-content {
   font-size: 1.1rem;
