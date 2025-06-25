@@ -6,11 +6,12 @@ nav:
   - Home: index.md
   - Getting Started:
     - Usage Guide: PINN_usage_guide.md
+  - Examples:
     - Poisson Equation Tutorial: Poisson_PINN_Tutorial.md
+    - Harmonic Oscillator Tutorial: Harmonic_Oscillator_PINN_Tutorial.md
   - API Reference:
     - Domain Module: Domain.md
     - PINN Module: PINN.md
-  - Test Highlighting: test.md
 
 theme:
   name: material
@@ -23,21 +24,20 @@ theme:
     - navigation.expand
     - navigation.footer
     - navigation.sections
+    - navigation.tabs
     - navigation.top
     - search.highlight
     - toc.follow
   palette:
     # Light mode
-    - media: "(prefers-color-scheme)"
-      scheme: default
+    - scheme: default
       primary: indigo
       accent: indigo
       toggle:
         icon: material/brightness-auto
         name: Switch to dark mode
     # Dark mode
-    - media: "(prefers-color-scheme: dark)"
-      scheme: slate
+    - scheme: slate
       primary: indigo
       accent: indigo
       toggle:
@@ -82,7 +82,7 @@ plugins:
   - git-revision-date-localized:
       enable_creation_date: true
 
-repo_url: https://github.com/shivani/PINN-kit
+repo_url: https://github.com/fraqtal-technologies/PINN-kit
 repo_name: GitHub
 
 docs_dir: docs 

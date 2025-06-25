@@ -14,14 +14,25 @@
   z-index: 100;
 }
 
-/* Hide top navigation if it exists */
-.md-header-nav {
-  display: none !important;
+/* Ensure header and dark mode toggle are visible */
+.md-header {
+  display: block !important;
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 300px;
+  z-index: 101;
 }
 
-/* Adjust main content to account for sidebar */
+/* Ensure dark mode toggle button is visible */
+.md-header__button {
+  display: block !important;
+}
+
+/* Adjust main content to account for sidebar and header */
 .md-main {
   margin-left: 300px;
+  margin-top: 60px;
 }
 
 .md-content {
@@ -34,8 +45,13 @@
     display: none !important;
   }
   
+  .md-header {
+    left: 0;
+  }
+  
   .md-main {
     margin-left: 0;
+    margin-top: 60px;
   }
 }
 

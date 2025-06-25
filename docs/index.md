@@ -1,4 +1,4 @@
-# PINN-kit 🧠⚡
+# PINN-kit
 
 A comprehensive toolkit for **Physics-Informed Neural Networks (PINNs)** that empowers researchers and engineers to solve complex differential equations using deep learning.
 
@@ -6,16 +6,16 @@ A comprehensive toolkit for **Physics-Informed Neural Networks (PINNs)** that em
     PINN-kit provides an intuitive interface for implementing and training physics-informed neural networks, 
     combining the power of deep learning with the rigor of physics-based modeling.
 
-## ✨ Key Features
+## Key Features
 
-- 🎯 **Easy-to-use interface** for defining physics-informed neural networks
-- 🔧 **Flexible domain handling** utilities for arbitrary input variables  
-- 🚀 **High-performance training** with PyTorch backend
-- 📊 **Built-in visualization** tools for results analysis
-- 🔬 **Support for various** differential equation types
-- 🎨 **Clean, modular design** for easy customization
+- **Easy-to-use interface** for defining physics-informed neural networks
+- **Flexible domain handling** utilities for arbitrary input variables  
+- **High-performance training** with PyTorch backend
+- **Built-in visualization** tools for results analysis
+- **Support for various** differential equation types
+- **Clean, modular design** for easy customization
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Installation
 
@@ -61,7 +61,7 @@ pinn.train_model(domain, physics_loss, epochs=1000)
 !!! success "That's it!"
     PINN-kit handles all the complexity behind the scenes, letting you focus on your physics problem.
 
-## 📚 Documentation
+## Documentation
 
 Explore our comprehensive documentation to get the most out of PINN-kit:
 
@@ -77,7 +77,7 @@ Explore our comprehensive documentation to get the most out of PINN-kit:
 === "Examples"
     See real-world applications and use cases with complete code examples.
 
-## 🎯 Use Cases
+## Use Cases
 
 PINN-kit is perfect for solving:
 
@@ -87,7 +87,7 @@ PINN-kit is perfect for solving:
 - **Financial modeling** with differential constraints
 - **Biological systems** and **chemical reactions**
 
-## 🔧 System Requirements
+## System Requirements
 
 | Component | Requirement |
 |-----------|-------------|
@@ -99,18 +99,18 @@ PINN-kit is perfect for solving:
 !!! note "Dependencies"
     All required dependencies (including PyTorch) are automatically installed with PINN-kit.
 
-## 🤝 Contributing
+## Contributing
 
 We welcome contributions! Whether it's:
 
-- 🐛 **Bug reports** and feature requests
-- 📝 **Documentation** improvements  
-- 💻 **Code contributions** and pull requests
-- 💡 **Ideas** and suggestions
+- **Bug reports** and feature requests
+- **Documentation** improvements  
+- **Code contributions** and pull requests
+- **Ideas** and suggestions
 
 Visit our [GitHub repository](https://github.com/shivani/PINN-kit) to get started.
 
-## 📄 License
+## License
 
 This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
 
@@ -120,8 +120,8 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 **Made with ❤️ for the scientific computing community**
 
-[![GitHub stars](https://img.shields.io/github/stars/shivani/PINN-kit?style=social)](https://github.com/shivani/PINN-kit)
-[![PyPI version](https://badge.fury.io/py/pinn-kit.svg)](https://pypi.org/project/pinn-kit/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+Created by Shivani M. Pillay (CEO) fraqtal technologies
+
+
 
 </div>

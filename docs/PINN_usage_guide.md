@@ -9,6 +9,7 @@ This guide explains how to use the PINN-kit library to develop and train Physics
 4. [Loss Functions](#loss-functions)
 5. [Training Process](#training-process)
 6. [Example Usage](#example-usage)
+7. [Using LLMs to Generate PINN Loss Functions from LaTeX](#using-llms-to-generate-pin-loss-functions-from-latex)
 
 ## Setup
 
@@ -328,3 +329,32 @@ network = PINN(layer_list)
    - Add regularization
    - Reduce network size
    - Increase number of training points 
+
+## Using LLMs to Generate PINN Loss Functions from LaTeX
+
+You can use Large Language Models (LLMs) such as ChatGPT or Copilot to automatically generate PINN loss functions from differential equations written in LaTeX. This is enabled by following the rules in the [LLM_PINN_Loss_Rules.md](LLM_PINN_Loss_Rules.md) file.
+
+### Workflow
+1. **Write your differential equation and boundary/initial conditions in LaTeX.**
+2. **Provide the equation and conditions to the LLM, along with a prompt to use the rules in LLM_PINN_Loss_Rules.md.**
+3. **The LLM will parse the LaTeX, identify variables and derivatives, and generate PyTorch code for the residual and loss functions.**
+4. **Copy the generated code into your pinn-kit training script.**
+
+### Example Prompt
+```
+Given the following LaTeX equation and initial/boundary conditions, generate pinn-kit compatible PyTorch loss functions using the rules in LLM_PINN_Loss_Rules.md:
+
+Equation:
+$$
+\frac{d^2x}{dt^2} + \omega^2 x = 0
+$$
+Initial conditions:
+$$
+x(0) = 1, \quad \frac{dx}{dt}(0) = 0
+$$
+```
+
+### Tips
+- Always check the generated code for correctness and adapt variable names as needed.
+- For more complex equations (e.g., systems, higher dimensions), ensure the LLM correctly maps all variables and derivatives.
+- Refer to the [LLM_PINN_Loss_Rules.md](LLM_PINN_Loss_Rules.md) for detailed conversion steps and examples. 
