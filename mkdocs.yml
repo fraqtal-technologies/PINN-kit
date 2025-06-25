@@ -7,6 +7,7 @@ nav:
   - Usage Guide: PINN_usage_guide.md
   - Domain Module: Domain.md
   - PINN Module: PINN.md
+  - Poisson Equation Tutorial: Poisson_PINN_Tutorial.md
   - Test Highlighting: test.md
 
 theme:
@@ -80,6 +81,7 @@ extra_css:
 extra_javascript:
   - https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js
   - assets/javascripts/mermaid.js
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
 
 extra:
   social:
@@ -123,6 +125,8 @@ markdown_extensions:
       permalink: true
       title: On this page
       toc_depth: 3
+  - pymdownx.arithmatex:
+      generic: true
 
 plugins:
   - search:
