@@ -90,7 +90,7 @@ pinn.train_model([x_arr, y_arr, t_arr], loss_list, num_epochs=1000)
 
 ## Documentation
 
-For detailed documentation, please visit [our documentation page](https://github.com/shivani/PINN-kit).
+For detailed documentation, please visit [our documentation page](https://fraqtal-technologies.github.io/PINN-kit).
 
 ## License
 
