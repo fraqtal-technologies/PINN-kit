@@ -1,13 +1,15 @@
-site_name: PINN-kit Documentation
+site_name: PINN-kit
 site_description: A comprehensive toolkit for Physics-Informed Neural Networks
 site_author: Shivani
 
 nav:
   - Home: index.md
-  - Usage Guide: PINN_usage_guide.md
-  - Domain Module: Domain.md
-  - PINN Module: PINN.md
-  - Poisson Equation Tutorial: Poisson_PINN_Tutorial.md
+  - Getting Started:
+    - Usage Guide: PINN_usage_guide.md
+    - Poisson Equation Tutorial: Poisson_PINN_Tutorial.md
+  - API Reference:
+    - Domain Module: Domain.md
+    - PINN Module: PINN.md
   - Test Highlighting: test.md
 
 theme:
@@ -16,7 +18,6 @@ theme:
     repo: fontawesome/brands/github
     edit: fontawesome/solid/pen-to-square
     view: fontawesome/solid/eye
-  logo: assets/logo.svg
   favicon: assets/favicon.svg
   palette:
     # Light mode
