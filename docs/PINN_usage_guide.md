@@ -9,7 +9,7 @@ This guide explains how to use the PINN-kit library to develop and train Physics
 4. [Loss Functions](#loss-functions)
 5. [Training Process](#training-process)
 6. [Example Usage](#example-usage)
-7. [Using LLMs to Generate PINN Loss Functions from LaTeX](#using-llms-to-generate-pin-loss-functions-from-latex)
+7. [Using LLMs to Generate PINN Loss Functions from LaTeX](#using-llms-to-generate-pinn-loss-functions-from-latex)
 
 ## Setup
 
@@ -289,46 +289,46 @@ network = PINN(layer_list)
 1. **Domain Size**: Choose appropriate domain boundaries that capture the physical behavior you're interested in.
 
 2. **Sampling Strategy**: 
-   - Use evenly spaced points for simple problems
-   - Use Latin Hypercube Sampling for better coverage in complex domains
-   - Consider using more points in regions where the solution changes rapidly
+    - Use evenly spaced points for simple problems
+    - Use Latin Hypercube Sampling for better coverage in complex domains
+    - Consider using more points in regions where the solution changes rapidly
 
 3. **Network Architecture**:
-   - Start with a moderate number of layers (5-10) and neurons (20-50)
-   - Use tanh activation for smooth solutions
-   - Use ReLU for solutions with sharp gradients
+    - Start with a moderate number of layers (5-10) and neurons (20-50)
+    - Use tanh activation for smooth solutions
+    - Use ReLU for solutions with sharp gradients
 
 4. **Training**:
-   - Start with Adam optimizer for most problems
-   - Use L-BFGS for problems with smooth solutions
-   - Monitor the loss components separately to identify which constraints are harder to satisfy
-   - Use learning rate scheduling if the loss plateaus
+    - Start with Adam optimizer for most problems
+    - Use L-BFGS for problems with smooth solutions
+    - Monitor the loss components separately to identify which constraints are harder to satisfy
+    - Use learning rate scheduling if the loss plateaus
 
 5. **Loss Weights**:
-   - Adjust the weights of different loss components if one type of constraint is harder to satisfy
-   - Consider using adaptive weights that change during training
+    - Adjust the weights of different loss components if one type of constraint is harder to satisfy
+    - Consider using adaptive weights that change during training
 
 ## Common Issues and Solutions
 
 1. **Training Instability**:
-   - Reduce learning rate
-   - Use gradient clipping
-   - Normalize input data
+    - Reduce learning rate
+    - Use gradient clipping
+    - Normalize input data
 
 2. **Poor Solution Accuracy**:
-   - Increase number of training points
-   - Add more layers or neurons
-   - Try different sampling strategies
+    - Increase number of training points
+    - Add more layers or neurons
+    - Try different sampling strategies
 
 3. **Slow Training**:
-   - Reduce batch size
-   - Use GPU acceleration
-   - Simplify network architecture
+    - Reduce batch size
+    - Use GPU acceleration
+    - Simplify network architecture
 
 4. **Overfitting**:
-   - Add regularization
-   - Reduce network size
-   - Increase number of training points 
+    - Add regularization
+    - Reduce network size
+    - Increase number of training points 
 
 ## Using LLMs to Generate PINN Loss Functions from LaTeX
 

@@ -108,7 +108,7 @@ We welcome contributions! Whether it's:
 - **Code contributions** and pull requests
 - **Ideas** and suggestions
 
-Visit our [GitHub repository](https://github.com/shivani/PINN-kit) to get started.
+Visit our [GitHub repository](https://github.com/fraqtal-technologies/PINN-kit) to get started.
 
 ## License
 
@@ -118,9 +118,9 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 <div align="center">
 
-**Made with ❤️ for the scientific computing community**
+Made with ❤️ for the scientific computing community.
 
-Created by Shivani M. Pillay (CEO) fraqtal technologies
+Created by Shivani M. Pillay (CEO) fraqtal technologies Pty (LTD)
 
 
 
